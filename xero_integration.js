@@ -45,8 +45,21 @@ function populateSpreadsheetWithInvoices(xmlDocument) {
     Logger.log('Doc Id ' + docId);
     var invoices = root.getChild('Invoices').getChildren();
     // create spreadsheet header
-    populateSpreadsheetHeader(sheet1, invoices[0].getChildren());
+    for (var i = 0; i < invoices.length; i++) {
+      if (i === 0) {
+        populateSpreadsheetHeader(sheet1, invoices[i].getChildren());
+      };
+      populateSpreadsheetRow(sheet1, invoices[i].getChildren(), i+1);
+    };
   }
+}
+
+function populateSpreadsheetRow(sheet, columns, rowIndex) {
+  var columnValue = []; 
+  for (var i = 0; i < columns.length; i++) {
+    columnValue.push(columns[i].getText());
+  }
+  sheet.getRange(rowIndex + 1, 1, 1, columns.length).setValues([ columnValue ]);
 }
 
 function populateSpreadsheetHeader(sheet, headers) {
